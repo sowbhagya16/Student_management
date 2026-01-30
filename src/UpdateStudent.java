@@ -1,10 +1,11 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.Scanner;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-public class InsertStudent {
+public class UpdateStudent {
 
     public static void main(String[] args) {
 
@@ -19,16 +20,27 @@ public class InsertStudent {
 
             Connection con = DriverManager.getConnection(url, user, password);
 
-            String sql = "INSERT INTO student (name, age, course_id) VALUES (?, ?, ?)";
+            Scanner sc = new Scanner(System.in);
 
+            System.out.print("Enter student ID to update: ");
+            int id = sc.nextInt();
+
+            System.out.print("Enter new age: ");
+            int age = sc.nextInt();
+
+            String sql = "UPDATE student SET age = ? WHERE student_id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, "Vikram");
-            ps.setInt(2, 22);
-            ps.setInt(3, 4);
 
-            ps.executeUpdate();
+            ps.setInt(1, age);
+            ps.setInt(2, id);
 
-            System.out.println("Student inserted successfully");
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Student updated successfully");
+            } else {
+                System.out.println("Student ID not found");
+            }
 
             con.close();
 

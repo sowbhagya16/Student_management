@@ -1,10 +1,11 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-public class InsertStudent {
+public class ViewsStudents {
 
     public static void main(String[] args) {
 
@@ -19,16 +20,25 @@ public class InsertStudent {
 
             Connection con = DriverManager.getConnection(url, user, password);
 
-            String sql = "INSERT INTO student (name, age, course_id) VALUES (?, ?, ?)";
+            String sql = "SELECT * FROM student";
 
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, "Vikram");
-            ps.setInt(2, 22);
-            ps.setInt(3, 4);
 
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
 
-            System.out.println("Student inserted successfully");
+            System.out.println("Student List:");
+            System.out.println("----------------------------");
+
+            while (rs.next()) {
+                int id = rs.getInt("student_id");
+                String name = rs.getString("name");
+                int age = rs.getInt("age");
+                int courseId = rs.getInt("course_id");
+
+                System.out.println(
+                    id + " | " + name + " | " + age + " | " + courseId
+                );
+            }
 
             con.close();
 
